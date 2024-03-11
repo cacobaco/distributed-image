@@ -1,6 +1,14 @@
-import javax.imageio.ImageIO;
+package g18.padi.server;
+
+import g18.padi.utils.ImageTransformer;
+import g18.padi.utils.Request;
+import g18.padi.utils.Response;
+
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 

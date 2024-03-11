@@ -1,7 +1,6 @@
-import javax.imageio.ImageIO;
+package g18.padi.utils;
+
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 

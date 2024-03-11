@@ -1,3 +1,12 @@
+package g18.padi;
+
+import g18.padi.client.Client;
+import g18.padi.server.Server;
+import g18.padi.utils.ImageReader;
+import g18.padi.utils.ImageTransformer;
+import g18.padi.utils.Request;
+import g18.padi.utils.Response;
+
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
