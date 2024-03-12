@@ -9,6 +9,7 @@ import java.io.Serializable;
  * on the application's needs.
  */
 public class Response implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L; // Ensure compatibility during serialization
 
@@ -23,7 +24,7 @@ public class Response implements Serializable {
      * @param status  The status of the response, e.g., "Success" or "Error".
      * @param message The message or data contained in the response.
      */
-    public Response ( String status , String message , BufferedImage imageSection) {
+    public Response(String status, String message, BufferedImage imageSection) {
         this.status = status;
         this.message = message;
         this.imageSection = ImageTransformer.createBytesFromImage(imageSection);
@@ -34,7 +35,7 @@ public class Response implements Serializable {
      *
      * @return The status of the response.
      */
-    public String getStatus ( ) {
+    public String getStatus() {
         return status;
     }
 
@@ -43,7 +44,7 @@ public class Response implements Serializable {
      *
      * @param status The status of the response.
      */
-    public void setStatus ( String status ) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -52,7 +53,7 @@ public class Response implements Serializable {
      *
      * @return The message of the response.
      */
-    public String getMessage ( ) {
+    public String getMessage() {
         return message;
     }
 
@@ -61,7 +62,7 @@ public class Response implements Serializable {
      *
      * @param message The message of the response.
      */
-    public void setMessage ( String message ) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
@@ -74,10 +75,11 @@ public class Response implements Serializable {
     }
 
     @Override
-    public String toString ( ) {
+    public String toString() {
         return "Response{" +
                 "status='" + status + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }
+    
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
  * the application's needs.
  */
 public class Request implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L; // Ensure compatibility during serialization
 
@@ -23,18 +24,18 @@ public class Request implements Serializable {
      *                       request.
      * @param messageContent The content of the message.
      */
-    public Request ( String messageType , String messageContent , BufferedImage imageSection ) {
+    public Request(String messageType, String messageContent, BufferedImage imageSection) {
         this.messageType = messageType;
         this.messageContent = messageContent;
         this.imageSection = ImageTransformer.createBytesFromImage(imageSection);
-        }
+    }
 
     /**
      * Returns the type of the message.
      *
      * @return The type of the message.
      */
-    public String getMessageType ( ) {
+    public String getMessageType() {
         return messageType;
     }
 
@@ -43,7 +44,7 @@ public class Request implements Serializable {
      *
      * @param messageType The type of the message.
      */
-    public void setMessageType ( String messageType ) {
+    public void setMessageType(String messageType) {
         this.messageType = messageType;
     }
 
@@ -52,7 +53,7 @@ public class Request implements Serializable {
      *
      * @return The content of the message.
      */
-    public String getMessageContent ( ) {
+    public String getMessageContent() {
         return messageContent;
     }
 
@@ -61,7 +62,7 @@ public class Request implements Serializable {
      *
      * @param messageContent The content of the message.
      */
-    public void setMessageContent ( String messageContent ) {
+    public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
     }
 
@@ -74,10 +75,11 @@ public class Request implements Serializable {
     }
 
     @Override
-    public String toString ( ) {
+    public String toString() {
         return "Request{" +
                 "messageType='" + messageType + '\'' +
                 ", messageContent='" + messageContent + '\'' +
                 '}';
     }
+    
 }
