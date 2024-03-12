@@ -1,3 +1,5 @@
+package g18.padi.utils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

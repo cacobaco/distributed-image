@@ -1,3 +1,8 @@
+package g18.padi.client;
+
+import g18.padi.utils.Request;
+import g18.padi.utils.Response;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
