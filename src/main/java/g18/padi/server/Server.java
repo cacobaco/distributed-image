@@ -25,7 +25,7 @@ public class Server extends Thread {
      *
      * @param port The port number on which the server will listen for incoming connections.
      */
-    public Server ( int port ) {
+    public Server(int port) {
         this.port = port;
     }
 
@@ -33,11 +33,11 @@ public class Server extends Thread {
      * The entry point of the server thread. Starts the server to accept and handle client connections.
      */
     @Override
-    public void run ( ) {
+    public void run() {
         try {
-            startServer ( );
-        } catch ( Exception e ) {
-            e.printStackTrace ( );
+            startServer();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -47,14 +47,14 @@ public class Server extends Thread {
      *
      * @throws IOException If an I/O error occurs when opening the socket.
      */
-    private void startServer ( ) throws IOException {
-        try ( ServerSocket serverSocket = new ServerSocket ( port ) ) {
-            System.out.println ( "Server started on port " + port );
-            while ( true ) {
-                Socket clientSocket = serverSocket.accept ( );
+    private void startServer() throws IOException {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server started on port " + port);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
                 // Create and start a new thread for each connected client.
                 // TODO: Fix this for better resource management.
-                new Thread ( new ClientHandler ( clientSocket ) ).start ( );
+                new Thread(new ClientHandler(clientSocket)).start();
             }
         }
     }
@@ -71,7 +71,7 @@ public class Server extends Thread {
          *
          * @param socket The client socket.
          */
-        public ClientHandler ( Socket socket ) {
+        public ClientHandler(Socket socket) {
             this.clientSocket = socket;
         }
 
@@ -80,45 +80,42 @@ public class Server extends Thread {
          * client.
          */
         @Override
-        public void run ( ) {
-            try ( ObjectOutputStream out = new ObjectOutputStream ( clientSocket.getOutputStream ( ) ) ;
-                  ObjectInputStream in = new ObjectInputStream ( clientSocket.getInputStream ( ) ) ) {
+        public void run() {
+            try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
 
                 Request request;
                 // Continuously read objects sent by the client and respond to each.
-                while ( ( request = ( Request ) in.readObject ( ) ) != null ) {
-                    out.writeObject ( handleRequest ( request ) );
+                while ((request = (Request) in.readObject()) != null) {
+                    out.writeObject(handleRequest(request));
                 }
 
                 System.out.println(request.toString());
-
-            } catch ( EOFException e ) {
-                System.out.println ( "Client disconnected." );
-            } catch ( IOException | ClassNotFoundException e ) {
-                System.err.println ( "Error handling client: " + e.getMessage ( ) );
+            } catch (EOFException e) {
+                System.out.println("Client disconnected.");
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Error handling client: " + e.getMessage());
             } finally {
                 try {
-                    clientSocket.close ( );
-                } catch ( IOException e ) {
-                    System.err.println ( "Error closing client socket: " + e.getMessage ( ) );
+                    clientSocket.close();
+                } catch (IOException e) {
+                    System.err.println("Error closing client socket: " + e.getMessage());
                 }
             }
         }
-
-
 
         /**
          * Processes the client's request and generates a response.
          *
          * @param request The object received from the client.
-         *
          * @return The response object to be sent back to the client.
          */
-        private Response handleRequest ( Request request ) {
+        private Response handleRequest(Request request) {
             // TODO: Implement actual request handling logic here.
             BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));
-            return new Response ( "OK" , "Hello, Client!" ,editedImage);
+            return new Response("OK", "Hello, Client!", editedImage);
         }
+        
     }
 
 }
