@@ -1,47 +1,58 @@
 package g18.padi;
 
 import g18.padi.client.Client;
+import g18.padi.menu.MainMenu;
 import g18.padi.server.Server;
-import g18.padi.utils.ImageReader;
-import g18.padi.utils.ImageTransformer;
-import g18.padi.utils.Request;
-import g18.padi.utils.Response;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
+    private static final int FIRST_SERVER_PORT = 8000;
+    private static final int SERVER_COUNT = 2;
+    private static final int CLIENT_COUNT = 5;
+
     public static void main(String[] args) {
-        Server server = new Server(8888);
-        server.start();
+        List<Server> servers = createServers();
+        List<Client> clients = createClients();
 
-        BufferedImage sampleImage = ImageReader.readImage("sample.png");
+        MainMenu menu = new MainMenu(servers, clients);
+        menu.show();
+    }
 
-        //Java Swing stuff
-        JFrame frame = new JFrame("pa-distributed-img");
-        frame.setSize(400, 400);
-        JPanel panel = new JPanel();
-        ImageIcon icon = new ImageIcon(sampleImage);
-        JLabel label = new JLabel(icon);
-        panel.add(label);
+    /**
+     * Creates the servers.
+     *
+     * @return a list of servers
+     */
+    private static List<Server> createServers() {
+        List<Server> servers = new ArrayList<>();
 
-        JButton button = new JButton();
-        button.setText("Remove red");
-        panel.add(button);
+        for (int i = 0; i < SERVER_COUNT; i++) {
+            Server server = new Server(FIRST_SERVER_PORT + i);
+            servers.add(server);
+            server.start();
+        }
 
-        button.addActionListener(e -> {
-            Client client = new Client("Client A");
-            Request request = new Request("greeting", "Hello, Server!", sampleImage);
-            Response response = client.sendRequestAndReceiveResponse("localhost", 8888, request);
-            icon.setImage(ImageTransformer.createImageFromBytes(response.getImageSection()));
-            panel.repaint();
-        });
+        return servers;
+    }
 
-        frame.add(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+    /**
+     * Creates the clients.
+     *
+     * @return a list of clients
+     */
+    private static List<Client> createClients() {
+        List<Client> clients = new ArrayList<>();
+
+        for (int i = 0; i < CLIENT_COUNT; i++) {
+            int clientId = i + 1;
+            Client client = new Client("Client " + (clientId));
+            clients.add(client);
+        }
+
+        return clients;
     }
 
 }
