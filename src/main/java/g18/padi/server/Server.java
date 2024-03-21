@@ -60,6 +60,15 @@ public class Server extends Thread {
     }
 
     /**
+     * Gets the port number.
+     *
+     * @return the port number.
+     */
+    public int getPort() {
+        return this.port;
+    }
+
+    /**
      * Handles client connections. Reads objects from the client, processes them, and sends a response back.
      */
     private static class ClientHandler implements Runnable {
@@ -115,7 +124,7 @@ public class Server extends Thread {
             BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));
             return new Response("OK", "Hello, Client!", editedImage);
         }
-        
+
     }
 
 }
