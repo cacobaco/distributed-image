@@ -1,0 +1,12 @@
+{
+  "client": {
+    "number_of_divisions": 4
+  },
+  "server": {
+    "max_con": 10,
+    "max_processing_capacity": 4
+  },
+  "load_info_file": "load.info",
+  "results_directory": "results",
+  "num_of_servers": 5
+}
