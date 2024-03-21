@@ -6,7 +6,35 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A simple config reader
+ */
 public class ConfigReader {
+
+    private static ConfigReader instance = null;
+    private static JsonNode config = null;
+
+    /**
+     * Private constructor of ConfigReader class.
+     * Initializes the configuration settings by reading from the 'project.config' file.
+     *
+     * @throws IOException if an I/O error occurs while reading the configuration file
+     */
+    private ConfigReader() throws IOException {
+        config = readConfig("project.config");
+    }
+
+    /**
+     * Returns the singleton instance of ConfigReader.
+     *
+     * @return the singleton instance
+     */
+    public static ConfigReader getInstance() throws IOException {
+        if (instance == null) {
+            instance = new ConfigReader();
+        }
+        return instance;
+    }
 
     /**
      * Reads configuration settings from a JSON file.
@@ -15,7 +43,7 @@ public class ConfigReader {
      * @return           a JsonNode containing the configuration settings
      * @throws IOException if an I/O error occurs while reading the file
      */
-    public static JsonNode readConfig(String filePath) throws IOException {
+    public JsonNode readConfig(String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readTree(new File(filePath));
     }
@@ -23,60 +51,59 @@ public class ConfigReader {
     /**
      * Retrieves the number of columns for the client from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the number of client columns
      */
-    public static int getClientCols(JsonNode config) {
+    public int getClientCols() {
         return config.get("client").get("cols_number").asInt();
     }
 
     /**
      * Retrieves the number of rows for the client from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the number of client rows
      */
-    public static int getClientRows(JsonNode config) {
+    public int getClientRows() {
         return config.get("client").get("rows_number").asInt();
     }
 
     /**
      * Retrieves the maximum number of connections allowed for the server from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the maximum number of server connections
      */
-    public static int getServerMaxConnections(JsonNode config) {
+    public int getServerMaxConnections() {
         return config.get("server").get("max_conn").asInt();
     }
 
     /**
      * Retrieves the maximum processing capacity allowed for the server from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the maximum processing capacity of the server
      */
-    public static int getServerMaxProcessingCapacity(JsonNode config) {
+    public int getServerMaxProcessingCapacity() {
         return config.get("server").get("max_processing_capacity").asInt();
     }
 
     /**
      * Retrieves the filename for the load info file from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the filename for the load info file
      */
-    public static String getLoadInfoFile(JsonNode config) {
+    public String getLoadInfoFile() {
         return config.get("load_info_file").asText();
     }
 
     /**
      * Retrieves the total number of servers from the configuration settings.
      *
-     * @param config     the JsonNode containing the configuration settings
      * @return           the total number of servers
      */
-    public static int getTotalServers(JsonNode config) {
-        return config.get("num_of_servers").asInt();
+    public int[] getServers() {
+        JsonNode portsNode = config.get("server").get("ports");
+        int[] ports = new int[portsNode.size()];
+        for (int i = 0; i < portsNode.size(); i++) {
+            ports[i] = portsNode.get(i).asInt();
+        }
+        return ports;
     }
 }
