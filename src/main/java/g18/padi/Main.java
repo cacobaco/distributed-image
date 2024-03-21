@@ -1,5 +1,4 @@
 package g18.padi;
-
 import g18.padi.client.Client;
 import g18.padi.loadbalancer.LoadBalancer;
 import g18.padi.loadbalancer.manager.LoadBalancerLeastLoadManager;
@@ -7,20 +6,34 @@ import g18.padi.loadbalancer.manager.LoadBalancerManager;
 import g18.padi.loadbalancer.manager.data.ILoadBalancerDataManager;
 import g18.padi.loadbalancer.manager.data.LoadBalancerFileDataManager;
 import g18.padi.server.Server;
-import g18.padi.utils.ImageReader;
-import g18.padi.utils.ImageTransformer;
-import g18.padi.utils.Request;
-import g18.padi.utils.Response;
+import g18.padi.utils.*;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Main {
 
     private static final String LOAD_BALANCER_FILE_PATH = "load.info";
     private static LoadBalancer loadBalancer;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        JsonNode config = null;
+
+        int[] serverPorts = ConfigReader.getInstance().getServers();
+        System.out.println(serverPorts);
+
+        /* Aqui já ta dando problemas de sincronização
+
+        for (int i = 0; i < serverPorts.length; i++){
+            Server server = new Server(serverPorts[i]);
+            server.start();
+        } */
+
         Server server = new Server(8888);
         server.start();
 
