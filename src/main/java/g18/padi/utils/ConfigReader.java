@@ -51,6 +51,20 @@ public class ConfigReader {
     }
 
     /**
+     * Retrieves the client names from the configuration settings.
+     *
+     * @return an array of client names
+     */
+    public String[] getClientNames() {
+        JsonNode clientNamesNode = config.get("client").get("names");
+        String[] clientNames = new String[clientNamesNode.size()];
+        for (int i = 0; i < clientNamesNode.size(); i++) {
+            clientNames[i] = clientNamesNode.get(i).asText();
+        }
+        return clientNames;
+    }
+
+    /**
      * Retrieves the number of columns for the client from the configuration settings.
      *
      * @return the number of client columns
