@@ -67,6 +67,8 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
 
     /**
      * Increments the load of a given server.
+     * The load is incremented by the given amount.
+     * If the load is not set, it is set to 0 plus the increment value.
      *
      * @param serverPort the port of the server whose load is to be incremented.
      * @param increment  the amount by which the load is to be incremented.
@@ -87,6 +89,8 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
 
     /**
      * Decrements the load of a given server.
+     * The load is decremented by the given amount.
+     * If the load is not set, it is set to 0 minus the decrement value.
      *
      * @param serverPort the port of the server whose load is to be decremented.
      * @param decrement  the amount by which the load is to be decremented.
