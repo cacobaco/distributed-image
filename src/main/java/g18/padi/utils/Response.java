@@ -66,14 +66,29 @@ public class Response implements Serializable {
         this.message = message;
     }
 
+    /**
+     * Returns the image section of the response.
+     *
+     * @return The image section of the response.
+     */
     public byte[] getImageSection() {
         return imageSection;
     }
 
+    /**
+     * Sets the image section of the response.
+     *
+     * @param imageSection The image section of the response.
+     */
     public void setImageSection(byte[] imageSection) {
         this.imageSection = imageSection;
     }
 
+    /**
+     * Returns a string representation of the response.
+     *
+     * @return A string representation of the response.
+     */
     @Override
     public String toString() {
         return "Response{" +
@@ -81,5 +96,5 @@ public class Response implements Serializable {
                 ", message='" + message + '\'' +
                 '}';
     }
-    
+
 }

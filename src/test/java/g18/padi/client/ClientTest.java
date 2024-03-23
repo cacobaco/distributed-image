@@ -18,27 +18,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClientTest {
 
-    private static final int PORT = 8000;
+    private static final int PORT = 8100;
     private static final String TEST_IMAGE_PATH = "sample.png";
-    private ServerSocket serverSocket;
     private BufferedImage validImage;
 
     @BeforeEach
     void setUp() {
         validImage = ImageReader.readImage(TEST_IMAGE_PATH);
-        try {
-            serverSocket = new ServerSocket(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Send request and receive response successfully")
     void sendRequestAndReceiveResponseSuccess() throws IOException {
         Thread serverThread = new Thread(() -> {
-            try (ServerSocket serverSocket = new ServerSocket(8001)) {
-                System.out.println("Server started. Listening on port 8001...");
+            try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+                System.out.println("Server started. Listening on port " + PORT + "...");
                 while (!Thread.currentThread().isInterrupted()) {
                     try (Socket socket = serverSocket.accept()) {
                         System.out.println("Client connected: " + socket.getInetAddress());
@@ -61,7 +55,7 @@ class ClientTest {
 
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
-        Socket socket = client.sendRequest("localhost", 8001, request);
+        Socket socket = client.sendRequest("localhost", PORT, request);
         assertNotNull(socket);
         Response response = client.receiveResponse(socket);
         socket.close();
@@ -79,7 +73,7 @@ class ClientTest {
         // Simulate client sending request to non-existent server
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
-        Socket socket = client.sendRequest("nonexistent.server", 8001, request);
+        Socket socket = client.sendRequest("nonexistent.server", PORT, request);
 
         assertNull(socket);
     }

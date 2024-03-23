@@ -21,19 +21,19 @@ public class ClientThread extends Thread {
 
     private final BufferedImageSplit imageSplit;
     private final Client client;
-    private final String color;
+    private final String[] colors;
 
     /**
      * Constructs a ClientThread with the specified image split and client.
      *
      * @param imageSplit the BufferedImageSplit to be processed
      * @param client     the Client instance for communication with the server
-     * @param color      the color to be removed from the image
+     * @param colors     the colors to be removed from the image
      */
-    public ClientThread(BufferedImageSplit imageSplit, Client client, String color) {
+    public ClientThread(BufferedImageSplit imageSplit, Client client, String[] colors) {
         this.imageSplit = imageSplit;
         this.client = client;
-        this.color = color;
+        this.colors = colors;
     }
 
     /**
@@ -48,7 +48,7 @@ public class ClientThread extends Thread {
 
         try {
             int serverPort = Main.getLoadBalancer().getBestServer();
-            Request request = new Request("remove color", color, imageSplit.getBufferedImage());
+            Request request = new Request("remove colors", String.join(";", colors), imageSplit.getBufferedImage());
             socket = client.sendRequest("localhost", serverPort, request);
         } catch (IllegalStateException e) {
             System.out.println("No servers available");
