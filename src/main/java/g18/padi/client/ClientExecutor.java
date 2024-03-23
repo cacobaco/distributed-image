@@ -1,7 +1,9 @@
 package g18.padi.client;
 
 import g18.padi.utils.BufferedImageSplit;
+import g18.padi.utils.ConfigReader;
 import g18.padi.utils.ImageTransformer;
+
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -36,8 +38,8 @@ public class ClientExecutor {
      * It splits the input image into sub-images, processes them concurrently, and then reassembles the final image.
      */
     public void execute() {
-        int numRows = 4; // TODO buscar da config
-        int numCols = 4; // TODO buscar da config
+        int numRows = ConfigReader.getInstance().getClientRows();
+        int numCols = ConfigReader.getInstance().getClientCols();
 
         BufferedImage[][] images = ImageTransformer.splitImage(image, numRows, numCols);
         for (int i = 0; i < numRows; i++) {
@@ -65,14 +67,14 @@ public class ClientExecutor {
         }
 
         image = ImageTransformer.joinImages(finalImages, image.getType());
-        saveImageResult (image, "sample.png");
+        saveImageResult(image, "sample.png");
     }
 
     /**
      * Saves the resulting image to the "results" directory.
      *
-     * @param image         the resulting image to be saved
-     * @param originalName  the original name of the image
+     * @param image        the resulting image to be saved
+     * @param originalName the original name of the image
      */
     private void saveImageResult(BufferedImage image, String originalName) {
         String resultFileName;
