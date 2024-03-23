@@ -4,10 +4,10 @@ import g18.padi.utils.BufferedImageSplit;
 import g18.padi.utils.ConfigReader;
 import g18.padi.utils.ImageTransformer;
 
-import java.io.File;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +19,7 @@ public class ClientExecutor {
 
     private BufferedImage image;
     private final Client client;
+    private final String color;
     private final List<ClientThread> threads;
     private String imageName;
 
@@ -26,11 +27,14 @@ public class ClientExecutor {
      * Constructs a ClientExecutor with the specified image and client.
      *
      * @param image  the BufferedImage to be processed
+     * @param imageName the image name
      * @param client the Client instance for communication with the server
+     * @param color  the color to be removed from the image
      */
-    public ClientExecutor(BufferedImage image, String imageName, Client client) {
+   public ClientExecutor(BufferedImage image, String imageName, Client client, String color) {
         this.image = image;
         this.client = client;
+        this.color = color;
         this.threads = new ArrayList<>();
         this.imageName = imageName;
     }
@@ -48,7 +52,7 @@ public class ClientExecutor {
             for (int j = 0; j < numCols; j++) {
                 BufferedImageSplit imageSplit = new BufferedImageSplit(images[i][j], i, j);
 
-                ClientThread thread = new ClientThread(imageSplit, client);
+                ClientThread thread = new ClientThread(imageSplit, client, color);
                 threads.add(thread);
 
                 thread.start();

@@ -79,7 +79,33 @@ public class ClientMenu implements IMenu {
         buttonsPanel.add(Box.createVerticalGlue());
 
         removeRedButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, newImagePath,  client);
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "red");
+            ce.execute();
+            icon.setImage(ce.getImage());
+            mainPanel.repaint();
+        });
+
+        // Remove Green Button
+        JButton removeGreenButton = new JButton();
+        removeGreenButton.setText("Remove green");
+        buttonsPanel.add(removeGreenButton);
+        buttonsPanel.add(Box.createVerticalGlue());
+
+        removeGreenButton.addActionListener(e -> {
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "green");
+            ce.execute();
+            icon.setImage(ce.getImage());
+            mainPanel.repaint();
+        });
+
+        // Remove Blue Button
+        JButton removeBlueButton = new JButton();
+        removeBlueButton.setText("Remove blue");
+        buttonsPanel.add(removeBlueButton);
+        buttonsPanel.add(Box.createVerticalGlue());
+
+        removeBlueButton.addActionListener(e -> {
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "blue");
             ce.execute();
             icon.setImage(ce.getImage());
             mainPanel.repaint();
