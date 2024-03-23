@@ -22,7 +22,7 @@ public class ClientExecutor {
 
     private BufferedImage image;
     private final Client client;
-    private final String color;
+    private final String[] colors;
     private final List<ClientThread> threads;
     private String imageName;
 
@@ -32,12 +32,12 @@ public class ClientExecutor {
      * @param image     the BufferedImage to be processed
      * @param imageName the image name
      * @param client    the Client instance for communication with the server
-     * @param color     the color to be removed from the image
+     * @param colors    the colors to be removed from the image
      */
-    public ClientExecutor(BufferedImage image, String imageName, Client client, String color) {
+    public ClientExecutor(BufferedImage image, String imageName, Client client, String[] colors) {
         this.image = image;
         this.client = client;
-        this.color = color;
+        this.colors = colors;
         this.threads = new ArrayList<>();
         this.imageName = imageName;
     }
@@ -55,7 +55,7 @@ public class ClientExecutor {
             for (int j = 0; j < numCols; j++) {
                 BufferedImageSplit imageSplit = new BufferedImageSplit(images[i][j], i, j);
 
-                ClientThread thread = new ClientThread(imageSplit, client, color);
+                ClientThread thread = new ClientThread(imageSplit, client, colors);
                 threads.add(thread);
 
                 thread.start();

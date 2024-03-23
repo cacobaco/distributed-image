@@ -138,28 +138,35 @@ public class Server extends Thread {
          */
         private Response handleRequest(Request request) {
             switch (request.getMessageType()) {
-                case "remove color":
-                    return handleRemoveColorRequest(request);
+                case "remove colors":
+                    return handleRemoveColorsRequest(request);
                 default:
                     return new Response("ERROR", "Unrecognized message type", ImageTransformer.createImageFromBytes(request.getImageSection()));
             }
         }
 
         /**
-         * Processes a request to remove a color from an image.
+         * Processes a request to remove specific colors from an image.
          *
          * @param request The request object.
          * @return The response object containing the modified image.
          */
-        private Response handleRemoveColorRequest(Request request) {
+        private Response handleRemoveColorsRequest(Request request) {
             BufferedImage image = ImageTransformer.createImageFromBytes(request.getImageSection());
 
-            return switch (request.getMessageContent()) {
-                case "red" -> new Response("OK", "Red color removed", ImageTransformer.removeReds(image));
-                case "green" -> new Response("OK", "Green color removed", ImageTransformer.removeGreens(image));
-                case "blue" -> new Response("OK", "Blue color removed", ImageTransformer.removeBlues(image));
-                default -> new Response("ERROR", "Unrecognized color", image);
-            };
+            String[] colors = request.getMessageContent().split(";");
+
+            for (String color : colors) {
+                switch (color) {
+                    case "red" -> image = ImageTransformer.removeReds(image);
+                    case "green" -> image = ImageTransformer.removeGreens(image);
+                    case "blue" -> image = ImageTransformer.removeBlues(image);
+                }
+            }
+
+            System.out.println(colors[0]);
+
+            return new Response("OK", "Colors removed", image);
         }
     }
 
