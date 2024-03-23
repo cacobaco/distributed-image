@@ -7,6 +7,8 @@ import g18.padi.utils.ImageReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents the menu of a client.
@@ -33,13 +35,7 @@ public class ClientMenu implements IMenu {
     }
 
     /**
-     * Creates the menu which includes the panel to show the image
-     * the button to change the picture
-     * the button to remove red
-     * the button to remove blue
-     * the button to remove green
-     * the button reset the picture to the original state
-     *
+     * Creates the menu.
      */
     private void create() {
         //Java Swing stuff
@@ -84,42 +80,45 @@ public class ClientMenu implements IMenu {
             }
         });
 
-        // Remove Red Button
-        JButton removeRedButton = new JButton();
-        removeRedButton.setText("Remove red");
-        buttonsPanel.add(removeRedButton);
+        // Remove Colors Button
+        JButton removeColorsButton = new JButton();
+        removeColorsButton.setText("Remove colors");
+        buttonsPanel.add(removeColorsButton);
         buttonsPanel.add(Box.createVerticalGlue());
 
-        removeRedButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, imagePath, client, "red");
-            ce.execute();
-            icon.setImage(ce.getImage());
-            mainPanel.repaint();
-        });
+        removeColorsButton.addActionListener(e -> {
+            String[] colors = {"red", "green", "blue"};
 
-        // Remove Green Button
-        JButton removeGreenButton = new JButton();
-        removeGreenButton.setText("Remove green");
-        buttonsPanel.add(removeGreenButton);
-        buttonsPanel.add(Box.createVerticalGlue());
+            JPanel al = new JPanel();
+            for (String color : colors) {
+                JCheckBox box = new JCheckBox(color);
+                al.add(box);
+            }
+            int option = JOptionPane.showConfirmDialog(null, al);
 
-        removeGreenButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, imagePath, client, "green");
-            ce.execute();
-            icon.setImage(ce.getImage());
-            mainPanel.repaint();
-        });
+            if (option != JOptionPane.OK_OPTION) {
+                return;
+            }
 
-        // Remove Blue Button
-        JButton removeBlueButton = new JButton();
-        removeBlueButton.setText("Remove blue");
-        buttonsPanel.add(removeBlueButton);
-        buttonsPanel.add(Box.createVerticalGlue());
+            List<String> selectedColors = new ArrayList<>();
+            for (Component component : al.getComponents()) {
+                JCheckBox box = (JCheckBox) component;
+                if (box.isSelected()) {
+                    selectedColors.add(box.getText());
+                }
+            }
 
-        removeBlueButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, imagePath, client, "blue");
-            ce.execute();
-            icon.setImage(ce.getImage());
+            if (selectedColors.isEmpty()) {
+                return;
+            }
+
+            // Send the request to the server
+            ClientExecutor executor = new ClientExecutor(image, imagePath, client, selectedColors.toArray(new String[0]));
+            executor.execute();
+
+            // Update the image
+            BufferedImage resultImage = executor.getImage();
+            icon.setImage(resultImage);
             mainPanel.repaint();
         });
 
