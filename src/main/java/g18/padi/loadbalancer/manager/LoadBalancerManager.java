@@ -42,6 +42,28 @@ public abstract class LoadBalancerManager {
     }
 
     /**
+     * Increments the load of a given server.
+     *
+     * @param serverPort the port of the server whose load is to be incremented.
+     * @param increment  the amount by which the load is to be incremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean incrementServerLoad(int serverPort, int increment) {
+        return dataManager.incrementServerLoad(serverPort, increment);
+    }
+
+    /**
+     * Decrements the load of a given server.
+     *
+     * @param serverPort the port of the server whose load is to be decremented.
+     * @param decrement  the amount by which the load is to be decremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean decrementServerLoad(int serverPort, int decrement) {
+        return dataManager.decrementServerLoad(serverPort, decrement);
+    }
+
+    /**
      * Removes the load of a given server.
      *
      * @param serverPort the port of the server whose load is to be removed.

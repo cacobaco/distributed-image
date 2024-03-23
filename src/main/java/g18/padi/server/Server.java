@@ -1,5 +1,6 @@
 package g18.padi.server;
 
+import g18.padi.Main;
 import g18.padi.utils.ConfigReader;
 import g18.padi.utils.ImageTransformer;
 import g18.padi.utils.Request;
@@ -62,7 +63,7 @@ public class Server extends Thread {
 
                 executor.submit(new ClientHandler(clientSocket));
 
-                // TODO Update server load
+                Main.getLoadBalancer().incrementServerLoad(port, 1);
             }
         } finally {
             executor.shutdown();
@@ -81,7 +82,7 @@ public class Server extends Thread {
     /**
      * Handles client connections. Reads objects from the client, processes them, and sends a response back.
      */
-    private static class ClientHandler implements Runnable {
+    private class ClientHandler implements Runnable {
 
         private final Socket clientSocket;
 
@@ -122,7 +123,7 @@ public class Server extends Thread {
                 }
             }
 
-            // TODO Update server load
+            Main.getLoadBalancer().decrementServerLoad(Server.this.getPort(), 1);
         }
 
         /**

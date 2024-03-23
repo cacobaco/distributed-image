@@ -114,6 +114,44 @@ public class LoadBalancerTest {
         }
 
         @Test
+        @DisplayName("Test increment server load success.")
+        public void testIncrementServerLoadSuccess() {
+            boolean result = loadBalancer.incrementServerLoad(SERVER_PORT, 5);
+            assertTrue(result);
+        }
+
+        @Test
+        @DisplayName("Test increment server load success when server load is not set.")
+        public void testIncrementServerLoadWhenNotSetSuccess() {
+            boolean result = loadBalancer.incrementServerLoad(SERVER_PORT, 5);
+            assertTrue(result);
+        }
+
+        @Test
+        @DisplayName("Test decrement server load success.")
+        public void testDecrementServerLoadSuccess() {
+            boolean result = loadBalancer.incrementServerLoad(SERVER_PORT, 5);
+            assertTrue(result);
+        }
+
+        @Test
+        @DisplayName("Test decrement server load correct.")
+        public void testDecrementServerLoadCorrect() {
+            boolean result = loadBalancer.setServerLoad(SERVER_PORT, 10);
+            assertTrue(result);
+
+            result = loadBalancer.decrementServerLoad(SERVER_PORT, 2);
+            assertTrue(result);
+        }
+
+        @Test
+        @DisplayName("Test decrement server load success when server load is not set.")
+        public void testDecrementServerLoadWhenNotSetSuccess() {
+            boolean result = loadBalancer.decrementServerLoad(SERVER_PORT, 2);
+            assertTrue(result);
+        }
+
+        @Test
         @DisplayName("Test set server load success.")
         public void testSetServerLoadSuccess() {
             LoadBalancerTest.this.testSetServerLoadSuccess();
@@ -125,6 +163,7 @@ public class LoadBalancerTest {
             LoadBalancerTest.this.testUpdateServerLoadSuccess();
         }
 
+        @Test
         @DisplayName("Test remove server load when server load is not set.")
         public void testRemoveServerLoadWhenNotSet() {
             LoadBalancerTest.this.testRemoveServerLoadWhenNotSet();

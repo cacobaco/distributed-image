@@ -18,6 +18,24 @@ public interface ILoadBalancerDataManager {
     boolean setServerLoad(int serverPort, int load);
 
     /**
+     * Increments the load of a given server.
+     *
+     * @param serverPort the port of the server whose load is to be incremented.
+     * @param increment  the amount by which the load is to be incremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    boolean incrementServerLoad(int serverPort, int increment);
+
+    /**
+     * Decrements the load of a given server.
+     *
+     * @param serverPort the port of the server whose load is to be decremented.
+     * @param decrement  the amount by which the load is to be decremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    boolean decrementServerLoad(int serverPort, int decrement);
+
+    /**
      * Removes the load of a given server.
      *
      * @param serverPort the port of the server whose load is to be removed.

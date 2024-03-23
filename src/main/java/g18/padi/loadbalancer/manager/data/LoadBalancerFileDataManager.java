@@ -66,6 +66,50 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
     }
 
     /**
+     * Increments the load of a given server.
+     * The load is incremented by the given amount.
+     * If the load is not set, it is set to 0 plus the increment value.
+     *
+     * @param serverPort the port of the server whose load is to be incremented.
+     * @param increment  the amount by which the load is to be incremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    @Override
+    public boolean incrementServerLoad(int serverPort, int increment) {
+        lock.lock();
+
+        int currentLoad = getServerLoad(serverPort);
+        int newLoad = currentLoad + increment;
+
+        boolean success = setServerLoad(serverPort, newLoad);
+
+        lock.unlock();
+        return success;
+    }
+
+    /**
+     * Decrements the load of a given server.
+     * The load is decremented by the given amount.
+     * If the load is not set, it is set to 0 minus the decrement value.
+     *
+     * @param serverPort the port of the server whose load is to be decremented.
+     * @param decrement  the amount by which the load is to be decremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    @Override
+    public boolean decrementServerLoad(int serverPort, int decrement) {
+        lock.lock();
+
+        int currentLoad = getServerLoad(serverPort);
+        int newLoad = currentLoad - decrement;
+
+        boolean success = setServerLoad(serverPort, newLoad);
+
+        lock.unlock();
+        return success;
+    }
+
+    /**
      * Removes the load of a given server.
      *
      * @param serverPort the port of the server whose load is to be removed.
