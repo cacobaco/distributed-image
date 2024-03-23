@@ -8,6 +8,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +29,12 @@ public class ClientExecutor {
     /**
      * Constructs a ClientExecutor with the specified image and client.
      *
-     * @param image  the BufferedImage to be processed
+     * @param image     the BufferedImage to be processed
      * @param imageName the image name
-     * @param client the Client instance for communication with the server
-     * @param color  the color to be removed from the image
+     * @param client    the Client instance for communication with the server
+     * @param color     the color to be removed from the image
      */
-   public ClientExecutor(BufferedImage image, String imageName, Client client, String color) {
+    public ClientExecutor(BufferedImage image, String imageName, Client client, String color) {
         this.image = image;
         this.client = client;
         this.color = color;
@@ -86,13 +89,24 @@ public class ClientExecutor {
         String resultFileName;
         String extension;
 
-        int extensionIndex = originalName.lastIndexOf('.');
+        String fileName;
+
+        if (originalName == null) {
+            LocalDateTime now = LocalDateTime.now();
+            String date = now.toString().replace(":", "-");
+            fileName = date + ".png";
+        } else {
+            Path path = Paths.get(originalName);
+            fileName = path.getFileName().toString();
+        }
+
+        int extensionIndex = fileName.lastIndexOf('.');
         if (extensionIndex != -1) {
-            extension = originalName.substring(extensionIndex + 1);
-            resultFileName = originalName.substring(0, extensionIndex) + "_edited";
+            extension = fileName.substring(extensionIndex + 1);
+            resultFileName = fileName.substring(0, extensionIndex) + "_edited";
         } else {
             extension = "png"; // Caso a extensão não seja encontrada, assume-se .png como padrão
-            resultFileName = originalName + "_edited";
+            resultFileName = fileName + "_edited";
         }
 
         File directory = new File("results");
