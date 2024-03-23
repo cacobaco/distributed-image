@@ -8,17 +8,13 @@ import g18.padi.loadbalancer.manager.data.ILoadBalancerDataManager;
 import g18.padi.loadbalancer.manager.data.LoadBalancerFileDataManager;
 import g18.padi.menu.MainMenu;
 import g18.padi.server.Server;
+import g18.padi.utils.ConfigReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    private static final int FIRST_SERVER_PORT = 8000;
-    private static final int SERVER_COUNT = 2;
-    private static final int CLIENT_COUNT = 5;
-
-    private static final String LOAD_BALANCER_FILE_PATH = "load.info";
     private static LoadBalancer loadBalancer;
 
     public static void main(String[] args) {
@@ -37,8 +33,9 @@ public class Main {
     private static List<Server> createServers() {
         List<Server> servers = new ArrayList<>();
 
-        for (int i = 0; i < SERVER_COUNT; i++) {
-            Server server = new Server(FIRST_SERVER_PORT + i);
+        int[] serverPorts = ConfigReader.getInstance().getServers();
+        for (int serverPort : serverPorts) {
+            Server server = new Server(serverPort);
             servers.add(server);
             server.start();
         }
@@ -54,9 +51,9 @@ public class Main {
     private static List<Client> createClients() {
         List<Client> clients = new ArrayList<>();
 
-        for (int i = 0; i < CLIENT_COUNT; i++) {
-            int clientId = i + 1;
-            Client client = new Client("Client " + (clientId));
+        String[] clientNames = ConfigReader.getInstance().getClientNames();
+        for (String clientName : clientNames) {
+            Client client = new Client(clientName);
             clients.add(client);
         }
 
@@ -71,7 +68,9 @@ public class Main {
      */
     public static LoadBalancer getLoadBalancer() {
         if (loadBalancer == null) {
-            ILoadBalancerDataManager dataManager = new LoadBalancerFileDataManager(LOAD_BALANCER_FILE_PATH);
+            String loadInfoFilePath = ConfigReader.getInstance().getLoadInfoFile();
+
+            ILoadBalancerDataManager dataManager = new LoadBalancerFileDataManager(loadInfoFilePath);
             LoadBalancerManager manager = new LoadBalancerLeastLoadManager(dataManager);
             loadBalancer = new LoadBalancer(manager);
         }
