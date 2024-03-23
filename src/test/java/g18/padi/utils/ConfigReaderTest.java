@@ -46,12 +46,6 @@ class ConfigReaderTest {
     }
 
     @Test
-    @DisplayName("Test getServerMaxConnections()")
-    void testGetServerMaxConnections() {
-        assertNotNull(configReader.getServerMaxConnections());
-    }
-
-    @Test
     @DisplayName("Test getServerMaxProcessingCapacity()")
     void testGetServerMaxProcessingCapacity() {
         assertNotNull(configReader.getServerMaxProcessingCapacity());

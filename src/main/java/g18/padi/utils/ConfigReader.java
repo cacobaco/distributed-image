@@ -83,15 +83,6 @@ public class ConfigReader {
     }
 
     /**
-     * Retrieves the maximum number of connections allowed for the server from the configuration settings.
-     *
-     * @return the maximum number of server connections
-     */
-    public int getServerMaxConnections() {
-        return config.get("server").get("max_conn").asInt();
-    }
-
-    /**
      * Retrieves the maximum processing capacity allowed for the server from the configuration settings.
      *
      * @return the maximum processing capacity of the server
