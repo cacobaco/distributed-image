@@ -1,5 +1,6 @@
 package g18.padi.server;
 
+import g18.padi.utils.ConfigReader;
 import g18.padi.utils.ImageTransformer;
 import g18.padi.utils.Request;
 import g18.padi.utils.Response;
@@ -11,9 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -51,7 +50,9 @@ public class Server extends Thread {
      * @throws IOException If an I/O error occurs when opening the socket.
      */
     private void startServer() throws IOException {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        int maxSegments = ConfigReader.getInstance().getServerMaxProcessingCapacity();
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(maxSegments, maxSegments, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port " + port);
