@@ -1,52 +1,61 @@
 package g18.padi.menu;
 
 import g18.padi.client.Client;
-import g18.padi.utils.*;
-import g18.padi.menu.ClientMenu;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import javax.swing.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientMenuTest {
-
-    @Mock
-    private Client clientMock;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("Test show method")
     void testShowMethod() {
-        ClientMenu clientMenu = new ClientMenu(clientMock);
-        JFrame frameMock = mock(JFrame.class);
-        when(frameMock.isVisible()).thenReturn(false);
-        clientMenu.frame = frameMock;
+        ClientMenu clientMenu = new ClientMenu(new Client("animal"));
+        JFrame frameStub = new JFrame() {
+            boolean visible = false;
+
+            @Override
+            public void setVisible(boolean visible) {
+                this.visible = visible;
+            }
+
+            @Override
+            public boolean isVisible() {
+                return visible;
+            }
+        };
+
+        clientMenu.frame = frameStub;
         clientMenu.show();
-        verify(frameMock, times(1)).setVisible(true);
+
+        assertTrue(frameStub.isVisible());
     }
 
     @Test
     @DisplayName("Test close method")
     void testCloseMethod() {
-        ClientMenu clientMenu = new ClientMenu(clientMock);
-        JFrame frameMock = mock(JFrame.class);
-        when(frameMock.isVisible()).thenReturn(true);
-        clientMenu.frame = frameMock;
+        ClientMenu clientMenu = new ClientMenu(new Client("animal"));
+        JFrame frameStub = new JFrame() {
+            boolean visible = true;
+
+            @Override
+            public void dispose() {
+                visible = false;
+            }
+
+            @Override
+            public boolean isVisible() {
+                return visible;
+            }
+        };
+
+        clientMenu.frame = frameStub;
         clientMenu.close();
-        verify(frameMock, times(1)).dispose();
+
+        assertFalse(frameStub.isVisible());
     }
 }
