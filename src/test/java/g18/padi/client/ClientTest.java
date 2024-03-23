@@ -80,10 +80,8 @@ class ClientTest {
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
         Socket socket = client.sendRequest("nonexistent.server", 8001, request);
-        Response response = client.receiveResponse(socket);
-        socket.close();
 
-        assertNull(response);
+        assertNull(socket);
     }
 
     @Test
