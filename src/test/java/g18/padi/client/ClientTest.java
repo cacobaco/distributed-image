@@ -14,9 +14,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ClientTest {
 
@@ -63,12 +61,10 @@ class ClientTest {
 
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
-        Response response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
-        try {
-            response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Socket socket = client.sendRequest("localhost", 8001, request);
+        assertNotNull(socket);
+        Response response = client.receiveResponse(socket);
+        socket.close();
 
         assertNotNull(response);
         assertEquals("Success", response.getStatus());
@@ -83,8 +79,9 @@ class ClientTest {
         // Simulate client sending request to non-existent server
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
-        Response response = null;
-        response = client.sendRequestAndReceiveResponse("nonexistent.server", 8001, request);
+        Socket socket = client.sendRequest("nonexistent.server", 8001, request);
+        Response response = client.receiveResponse(socket);
+        socket.close();
 
         assertNull(response);
     }
