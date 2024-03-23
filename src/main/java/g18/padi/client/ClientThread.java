@@ -1,9 +1,9 @@
 package g18.padi.client;
 
+import g18.padi.Main;
 import g18.padi.utils.BufferedImageSplit;
 import g18.padi.utils.ImageTransformer;
 import g18.padi.utils.Request;
-import g18.padi.Main;
 import g18.padi.utils.Response;
 
 import java.awt.image.BufferedImage;
@@ -22,7 +22,7 @@ public class ClientThread extends Thread {
      * @param imageSplit the BufferedImageSplit to be processed
      * @param client     the Client instance for communication with the server
      */
-    public ClientThread(BufferedImageSplit imageSplit, Client client){
+    public ClientThread(BufferedImageSplit imageSplit, Client client) {
         this.imageSplit = imageSplit;
         this.client = client;
     }
@@ -33,9 +33,9 @@ public class ClientThread extends Thread {
      */
     @Override
     public void run() {
+        int serverPort = Main.getLoadBalancer().getBestServer();
         Request request = new Request("", "", imageSplit.getBufferedImage());
-        int server = 8000;
-        Response response = client.sendRequestAndReceiveResponse("localhost", server, request);
+        Response response = client.sendRequestAndReceiveResponse("localhost", serverPort, request);
         BufferedImage responseImage = ImageTransformer.createImageFromBytes(response.getImageSection());
         imageSplit.setBufferedImage(responseImage);
     }
