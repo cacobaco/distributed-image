@@ -47,6 +47,80 @@ public class LoadBalancerFileDataManagerTest {
     }
 
     @Test
+    @DisplayName("Test increment server load success.")
+    public void testIncrementServerLoadSuccess() {
+        boolean result = dataManager.incrementServerLoad(SERVER_PORT, 5);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Test increment server load correct.")
+    public void testIncrementServerLoadCorrect() {
+        boolean result = dataManager.setServerLoad(SERVER_PORT, 10);
+        assertTrue(result);
+
+        result = dataManager.incrementServerLoad(SERVER_PORT, 2);
+        assertTrue(result);
+
+        int load = dataManager.getServerLoad(SERVER_PORT);
+        assertEquals(load, 12);
+    }
+
+    @Test
+    @DisplayName("Test increment server load success when server load is not set.")
+    public void testIncrementServerLoadWhenNotSetSuccess() {
+        boolean result = dataManager.incrementServerLoad(SERVER_PORT, 5);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Test increment server load correct when server load is not set.")
+    public void testIncrementServerLoadWhenNotSetCorrect() {
+        boolean result = dataManager.incrementServerLoad(SERVER_PORT, 5);
+        assertTrue(result);
+
+        int load = dataManager.getServerLoad(SERVER_PORT);
+        assertEquals(load, 5);
+    }
+
+    @Test
+    @DisplayName("Test decrement server load success.")
+    public void testDecrementServerLoadSuccess() {
+        boolean result = dataManager.incrementServerLoad(SERVER_PORT, 5);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Test decrement server load correct.")
+    public void testDecrementServerLoadCorrect() {
+        boolean result = dataManager.setServerLoad(SERVER_PORT, 10);
+        assertTrue(result);
+
+        result = dataManager.decrementServerLoad(SERVER_PORT, 2);
+        assertTrue(result);
+
+        int load = dataManager.getServerLoad(SERVER_PORT);
+        assertEquals(load, 8);
+    }
+
+    @Test
+    @DisplayName("Test decrement server load success when server load is not set.")
+    public void testDecrementServerLoadWhenNotSetSuccess() {
+        boolean result = dataManager.decrementServerLoad(SERVER_PORT, 2);
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("Test decrement server load correct when server load is not set.")
+    public void testDecrementServerLoadWhenNotSetCorrect() {
+        boolean result = dataManager.decrementServerLoad(SERVER_PORT, 2);
+        assertTrue(result);
+
+        int load = dataManager.getServerLoad(SERVER_PORT);
+        assertEquals(load, -2);
+    }
+
+    @Test
     @DisplayName("Test update server load success.")
     public void testUpdateServerLoadSuccess() {
         boolean result = dataManager.setServerLoad(SERVER_PORT, 10);
