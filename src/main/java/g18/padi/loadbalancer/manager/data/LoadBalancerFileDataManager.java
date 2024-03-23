@@ -26,7 +26,7 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
      */
     public LoadBalancerFileDataManager(String filePath) {
         this.filePath = filePath;
-        this.lock = new ReentrantLock(true);
+        this.lock = new ReentrantLock();
 
         clearFile();
     }
@@ -81,6 +81,8 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
         int currentLoad = getServerLoad(serverPort);
         int newLoad = currentLoad + increment;
 
+        System.out.println("[LOAD] Load of server " + serverPort + " changed: " + currentLoad + " -> " + newLoad);
+
         boolean success = setServerLoad(serverPort, newLoad);
 
         lock.unlock();
@@ -102,6 +104,8 @@ public class LoadBalancerFileDataManager implements ILoadBalancerDataManager {
 
         int currentLoad = getServerLoad(serverPort);
         int newLoad = currentLoad - decrement;
+
+        System.out.println("[LOAD] Load of server " + serverPort + " changed: " + currentLoad + " -> " + newLoad);
 
         boolean success = setServerLoad(serverPort, newLoad);
 
