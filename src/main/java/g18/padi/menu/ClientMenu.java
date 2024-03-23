@@ -16,7 +16,7 @@ public class ClientMenu implements IMenu {
 
     private final Client client;
     private BufferedImage image;
-    private JFrame frame;
+    public JFrame frame;
 
     /**
      * Constructs a new ClientMenu instance.
@@ -33,7 +33,7 @@ public class ClientMenu implements IMenu {
     /**
      * Creates the menu.
      */
-    private void create() {
+    public void create() {
         //Java Swing stuff
         frame = new JFrame("Client " + client.getName());
         frame.setSize(400, 400);
