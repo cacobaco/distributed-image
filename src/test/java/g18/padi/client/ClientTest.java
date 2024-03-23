@@ -63,7 +63,7 @@ class ClientTest {
 
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
-        Response response = null;
+        Response response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
         try {
             response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
         } catch (Exception e) {
