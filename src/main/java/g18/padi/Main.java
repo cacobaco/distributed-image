@@ -34,7 +34,7 @@ public class Main {
      *
      * @return a list of servers
      */
-    private static List<Server> createServers() {
+    public static List<Server> createServers() {
         List<Server> servers = new ArrayList<>();
 
         for (int i = 0; i < SERVER_COUNT; i++) {
@@ -51,7 +51,7 @@ public class Main {
      *
      * @return a list of clients
      */
-    private static List<Client> createClients() {
+    public static List<Client> createClients() {
         List<Client> clients = new ArrayList<>();
 
         for (int i = 0; i < CLIENT_COUNT; i++) {
