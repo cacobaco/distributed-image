@@ -24,8 +24,9 @@ class ClientExecutorTest {
     void setUp() {
         image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         client = new Client("TestClient");
-        clientExecutor = new ClientExecutor(image, client, "red");
-    }
+        String imageName = "sample.png";
+        clientExecutor = new ClientExecutor(image, imageName, client, "red");
+   }
 
     @Test
     @DisplayName("Test ClientExecutor construction")
