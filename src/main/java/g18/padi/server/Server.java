@@ -13,7 +13,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -57,6 +59,8 @@ public class Server extends Thread {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port " + port);
+
+            Main.getLoadBalancer().setServerLoad(port, 0);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
