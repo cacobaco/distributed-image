@@ -30,14 +30,14 @@ public class Client {
         try {
             Socket socket = new Socket(host, port);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            System.out.println("Connecting to server at " + host + ":" + port);
-            System.out.println("Sending: " + request);
+            System.out.println("[Client " + name + "] Connecting to server at " + host + ":" + port);
+            System.out.println("[Client " + name + "] Sending: " + request);
             out.writeObject(request);
             return socket;
         } catch (UnknownHostException e) {
-            System.err.println("Server not found: " + e.getMessage());
+            System.err.println("[Client " + name + "] Server not found: " + e.getMessage());
         } catch (IOException e) {
-            System.err.println("I/O Error: " + e.getMessage());
+            System.err.println("[Client " + name + "] I/O Error: " + e.getMessage());
         }
         return null;
     }
@@ -46,12 +46,12 @@ public class Client {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Response response = (Response) in.readObject();
-            System.out.println("Received: " + response);
+            System.out.println("[Client " + name + "] Received: " + response);
             return response;
         } catch (IOException e) {
-            System.err.println("I/O Error: " + e.getMessage());
+            System.err.println("[Client " + name + "] I/O Error: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.err.println("Class not found: " + e.getMessage());
+            System.err.println("[Client " + name + "] Class not found: " + e.getMessage());
         }
         return null;
     }
