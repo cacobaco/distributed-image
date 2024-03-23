@@ -16,7 +16,7 @@ public class ClientMenu implements IMenu {
 
     private final Client client;
     private BufferedImage image;
-    public JFrame frame;
+    private JFrame frame;
 
     /**
      * Constructs a new ClientMenu instance.
@@ -127,4 +127,7 @@ public class ClientMenu implements IMenu {
         return client;
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
 }
