@@ -59,6 +59,50 @@ public class ImageTransformer {
     }
 
     /**
+     * Removes the green component of a given image.
+     *
+     * @param image the BufferedImage containing the image
+     * @return a BufferedImage without the green component
+     */
+    public static BufferedImage removeGreens(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color c;
+        BufferedImage resultingImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                c = new Color(image.getRGB(i, j));
+                int r = c.getRed();
+                int b = c.getBlue();
+                resultingImage.setRGB(i, j, new Color(r, 0, b).getRGB());
+            }
+        }
+        return resultingImage;
+    }
+
+    /**
+     * Removes the blue component of a given image.
+     *
+     * @param image the BufferedImage containing the image
+     * @return a BufferedImage without the blue component
+     */
+    public static BufferedImage removeBlues(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color c;
+        BufferedImage resultingImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                c = new Color(image.getRGB(i, j));
+                int r = c.getRed();
+                int g = c.getGreen();
+                resultingImage.setRGB(i, j, new Color(r, g, 0).getRGB());
+            }
+        }
+        return resultingImage;
+    }
+
+    /**
      * Joins a set of images into a single image.
      *
      * @param images the BufferedImage array containing the images to join
