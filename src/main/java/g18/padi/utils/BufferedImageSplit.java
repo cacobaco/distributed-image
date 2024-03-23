@@ -32,10 +32,16 @@ public class BufferedImageSplit {
     public BufferedImage getBufferedImage ( ) {
         return bufferedImage;
     }
-    //TODO java doc
+
+    /**
+     * Sets the BufferedImage of this BufferedImageSplit.
+     *
+     * @param image the BufferedImage to set
+     */
     public void setBufferedImage (BufferedImage image) {
         this.bufferedImage = image;
     }
+
     /**
      * Get the row index of the image split in the final image
      *
