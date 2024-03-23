@@ -33,7 +33,13 @@ public class ClientMenu implements IMenu {
     }
 
     /**
-     * Creates the menu.
+     * Creates the menu which includes the panel to show the image
+     * the button to change the picture
+     * the button to remove red
+     * the button to remove blue
+     * the button to remove green
+     * the button reset the picture to the original state
+     *
      */
     private void create() {
         //Java Swing stuff
