@@ -38,19 +38,16 @@ class ClientTest {
     @Test
     @DisplayName("Send request and receive response successfully")
     void sendRequestAndReceiveResponseSuccess() throws IOException {
-        // Start the server thread
         Thread serverThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(8001)) {
-                System.out.println("Server started. Listening on port 8000...");
-                while (true) {
+                System.out.println("Server started. Listening on port 8001...");
+                while (!Thread.currentThread().isInterrupted()) {
                     try (Socket socket = serverSocket.accept()) {
                         System.out.println("Client connected: " + socket.getInetAddress());
-                        // Simulate processing request and sending response
                         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                         Request request = (Request) in.readObject();
                         System.out.println("Received request: " + request);
-                        // Process the request...
                         Response response = new Response("Success", "Request processed", validImage);
                         out.writeObject(response);
                         System.out.println("Sent response: " + response);
@@ -64,17 +61,19 @@ class ClientTest {
         });
         serverThread.start();
 
-        // Simulate client sending request
         Client client = new Client("TestClient");
         Request request = new Request("MessageType", "MessageContent", validImage);
         Response response = null;
-        response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
+        try {
+            response = client.sendRequestAndReceiveResponse("localhost", 8001, request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertNotNull(response);
         assertEquals("Success", response.getStatus());
         assertEquals("Request processed", response.getMessage());
 
-        // Interrupt the server thread to stop listening for connections
         serverThread.interrupt();
     }
 

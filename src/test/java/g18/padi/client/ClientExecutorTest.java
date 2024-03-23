@@ -46,7 +46,6 @@ class ClientExecutorTest {
         try {
             clientExecutor.execute();
         } catch (Exception e) {
-            // If an exception is thrown, the test should fail
             assertTrue(false, "Exception occurred during image processing: " + e.getMessage());
         }
     }
