@@ -1,15 +1,11 @@
 package g18.padi.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ConfigReaderTest {
 
@@ -17,22 +13,24 @@ class ConfigReaderTest {
 
     @BeforeEach
     void setUp() {
-        try {
-            configReader = ConfigReader.getInstance();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        configReader = ConfigReader.getInstance();
     }
 
     @Test
     @DisplayName("Test singleton instance")
-    void testSingletonInstance() throws IOException {
+    void testSingletonInstance() {
         ConfigReader instance1 = ConfigReader.getInstance();
         ConfigReader instance2 = ConfigReader.getInstance();
 
         assertNotNull(instance1);
         assertNotNull(instance2);
         assertEquals(instance1, instance2);
+    }
+
+    @Test
+    @DisplayName("Test getClientNames()")
+    void testGetClientNames() {
+        assertNotNull(configReader.getClientNames());
     }
 
     @Test
