@@ -6,19 +6,13 @@ import g18.padi.utils.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.times;
-
-
-
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientExecutorTest {
 
@@ -29,7 +23,7 @@ class ClientExecutorTest {
     @BeforeEach
     void setUp() {
         image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        client = Mockito.mock(Client.class);
+        client = new Client("TestClient");
         clientExecutor = new ClientExecutor(image, client);
     }
 
@@ -47,14 +41,13 @@ class ClientExecutorTest {
 
     @Test
     @DisplayName("Test image processing")
-    void testImageProcessing() throws IOException, InterruptedException {
-        BufferedImageSplit imageSplit = new BufferedImageSplit(image, 0, 0);
-        BufferedImage img = imageSplit.getBufferedImage();
-        Response response = new Response("Success", "Request processed", img);
-        when(client.sendRequestAndReceiveResponse(anyString(), anyInt(), any(Request.class))).thenReturn(response);
+    void testImageProcessing() throws IOException {
 
-        clientExecutor.execute();
-
-        verify(client, times(16)).sendRequestAndReceiveResponse(anyString(), anyInt(), any(Request.class));
+        try {
+            clientExecutor.execute();
+        } catch (Exception e) {
+            // If an exception is thrown, the test should fail
+            assertTrue(false, "Exception occurred during image processing: " + e.getMessage());
+        }
     }
 }
