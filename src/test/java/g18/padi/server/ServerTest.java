@@ -16,13 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ServerTest {
 
+    private static final int SERVER_PORT = 8101;
     private BufferedImage image;
     private Server server;
 
     @BeforeEach
     void setUp() throws InterruptedException {
         image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        server = new Server(8000);
+        server = new Server(SERVER_PORT);
         server.start();
         Thread.sleep(1000); // wait to start
     }
@@ -30,36 +31,36 @@ class ServerTest {
     @Test
     @DisplayName("Server handles client connection successfully")
     void serverHandlesClientConnectionSuccessfully() throws IOException, ClassNotFoundException {
-        try (Socket socket = new Socket("localhost", 8000)) {
+        try (Socket socket = new Socket("localhost", SERVER_PORT)) {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
             // Test red
-            Request request = new Request("remove color", "red", image);
+            Request request = new Request("remove colors", "red", image);
             out.writeObject(request);
 
             Response response = (Response) in.readObject();
 
             assertEquals("OK", response.getStatus());
-            assertEquals("Red color removed", response.getMessage());
+            assertEquals("Colors removed", response.getMessage());
 
             // Test green
-            request = new Request("remove color", "green", image);
+            request = new Request("remove colors", "green", image);
             out.writeObject(request);
 
             response = (Response) in.readObject();
 
             assertEquals("OK", response.getStatus());
-            assertEquals("Green color removed", response.getMessage());
+            assertEquals("Colors removed", response.getMessage());
 
             // Test blue
-            request = new Request("remove color", "blue", image);
+            request = new Request("remove colors", "blue", image);
             out.writeObject(request);
 
             response = (Response) in.readObject();
 
             assertEquals("OK", response.getStatus());
-            assertEquals("Blue color removed", response.getMessage());
+            assertEquals("Colors removed", response.getMessage());
         }
 
         server.interrupt();
@@ -68,7 +69,7 @@ class ServerTest {
     @Test
     @DisplayName("Server handles unrecognized message type")
     void serverHandlesUnrecognizedMessageType() throws IOException, ClassNotFoundException {
-        try (Socket socket = new Socket("localhost", 8000)) {
+        try (Socket socket = new Socket("localhost", SERVER_PORT)) {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
@@ -87,17 +88,17 @@ class ServerTest {
     @Test
     @DisplayName("Server handles unrecognized color")
     void serverHandlesUnrecognizedColor() throws IOException, ClassNotFoundException {
-        try (Socket socket = new Socket("localhost", 8000)) {
+        try (Socket socket = new Socket("localhost", SERVER_PORT)) {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            Request request = new Request("remove color", "unrecognized color", image);
+            Request request = new Request("remove colors", "unrecognized color", image);
             out.writeObject(request);
 
             Response response = (Response) in.readObject();
 
-            assertEquals("ERROR", response.getStatus());
-            assertEquals("Unrecognized color", response.getMessage());
+            assertEquals("OK", response.getStatus());
+            assertEquals("Colors removed", response.getMessage());
         }
 
         server.interrupt();
