@@ -114,16 +114,16 @@ public class Server extends Thread {
                     out.writeObject(handleRequest(request));
                 }
 
-                System.out.println(request.toString());
+                System.out.println("[Server " + port + "] " + request.toString());
             } catch (EOFException e) {
-                System.out.println("Client disconnected.");
+                System.out.println("[Server " + port + "] Client disconnected.");
             } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Error handling client: " + e.getMessage());
+                System.err.println("[Server " + port + "] Error handling client: " + e.getMessage());
             } finally {
                 try {
                     clientSocket.close();
                 } catch (IOException e) {
-                    System.err.println("Error closing client socket: " + e.getMessage());
+                    System.err.println("[Server " + port + "] Error closing client socket: " + e.getMessage());
                 }
             }
 
