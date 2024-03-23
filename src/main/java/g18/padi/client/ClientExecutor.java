@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * The ClientExecutor class is responsible for executing client tasks in parallel using multiple threads.
@@ -27,7 +25,7 @@ public class ClientExecutor {
      * @param image  the BufferedImage to be processed
      * @param client the Client instance for communication with the server
      */
-    public ClientExecutor (BufferedImage image, Client client) {
+    public ClientExecutor(BufferedImage image, Client client) {
         this.image = image;
         this.client = client;
         this.threads = new ArrayList<>();
@@ -66,7 +64,7 @@ public class ClientExecutor {
             }
         }
 
-        image = ImageTransformer.joinImages(finalImages, image.getWidth(), image.getHeight(), image.getType());
+        image = ImageTransformer.joinImages(finalImages, image.getType());
         saveImageResult (image, "sample.png");
     }
 

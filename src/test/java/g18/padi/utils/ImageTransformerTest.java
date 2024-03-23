@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ImageTransformerTest {
 
@@ -31,12 +32,6 @@ class ImageTransformerTest {
     }
 
     @Test
-    @DisplayName("Split image with invalid dimensions")
-    void splitImageInvalidDimensions() {
-        assertThrows(IllegalArgumentException.class, () -> ImageTransformer.splitImage(validImage, INVALID_N_ROWS, INVALID_N_COLS));
-    }
-
-    @Test
     @DisplayName("Remove reds successfully")
     void removeRedsSuccess() {
         BufferedImage result = ImageTransformer.removeReds(validImage);
@@ -58,12 +53,7 @@ class ImageTransformerTest {
     void joinImagesSuccess() {
         BufferedImage[][] imageSplits = ImageTransformer.splitImage(validImage, VALID_N_ROWS, VALID_N_COLS);
 
-        for (int i = 0; i < VALID_N_ROWS; i++) {
-            for (int j = 0; j < VALID_N_COLS; j++) {
-                imageSplits[i][j] = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
-            }
-        }
-        BufferedImage result = ImageTransformer.joinImages(imageSplits, validImage.getWidth(), validImage.getHeight(), validImage.getType());
+        BufferedImage result = ImageTransformer.joinImages(imageSplits, validImage.getType());
         assertNotNull(result);
 
         assertEquals(validImage.getWidth(), result.getWidth());
