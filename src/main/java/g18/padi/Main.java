@@ -18,11 +18,22 @@ public class Main {
     private static LoadBalancer loadBalancer;
 
     public static void main(String[] args) {
+        initializeLoadBalancer();
+
         List<Server> servers = createServers();
         List<Client> clients = createClients();
 
         MainMenu menu = new MainMenu(servers, clients);
         menu.show();
+    }
+
+    /**
+     * Initializes the load balancer.
+     */
+    private static void initializeLoadBalancer() {
+        ILoadBalancerDataManager dataManager = new LoadBalancerFileDataManager(ConfigReader.getInstance().getLoadInfoFile());
+        LoadBalancerManager manager = new LoadBalancerLeastLoadManager(dataManager);
+        loadBalancer = new LoadBalancer(manager);
     }
 
     /**
@@ -68,11 +79,7 @@ public class Main {
      */
     public static LoadBalancer getLoadBalancer() {
         if (loadBalancer == null) {
-            String loadInfoFilePath = ConfigReader.getInstance().getLoadInfoFile();
-
-            ILoadBalancerDataManager dataManager = new LoadBalancerFileDataManager(loadInfoFilePath);
-            LoadBalancerManager manager = new LoadBalancerLeastLoadManager(dataManager);
-            loadBalancer = new LoadBalancer(manager);
+            initializeLoadBalancer();
         }
 
         return loadBalancer;
