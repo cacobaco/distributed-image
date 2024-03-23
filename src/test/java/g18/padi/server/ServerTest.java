@@ -15,53 +15,40 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerTest {
 
     private static final String IMAGE_PATH = "sample.png";
-    private BufferedImage validImage;
-    private Server server;
     private Thread serverThread;
-    private int port = 8001;
+    private final int  port = 8001;
     private BufferedImageSplit imageSplit;
 
     @BeforeEach
     public void setUp() {
+
         try {
-            validImage = ImageIO.read(new File(IMAGE_PATH)); // Load a valid image
+            BufferedImage validImage = ImageIO.read(new File(IMAGE_PATH)); // Load a valid image
             imageSplit = new BufferedImageSplit(validImage, 3, 3);
         } catch (IOException e) {
             e.printStackTrace();
-            // Fail the test if image loading fails
-            assertTrue(false);
         }
-
-        // Start the server in a separate thread
-        server = new Server(port);
+        Server server = new Server(port);
         serverThread = new Thread(server);
         serverThread.start();
-
-        // Wait for the server to start
         try {
-            Thread.sleep(2000); // Adjust delay as needed
+            Thread.sleep(1000); // Adjust delay as needed
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Verify that the server is running
-        assertTrue(serverThread.isAlive());
     }
 
     @AfterEach
     public void tearDown() {
-        // Stop the server
-        server.interrupt();
-
-        // Wait for the server to stop
+        serverThread.interrupt();
+        // Add a short delay to allow the server to stop
         try {
-            serverThread.join();
+            Thread.sleep(1000); // Adjust delay as needed
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -73,6 +60,9 @@ public class ServerTest {
              ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
 
+            // Verify that the server is running
+            assertTrue(serverThread.isAlive());
+
             // Sending a test request
             out.writeObject(new Request("", "", imageSplit.getBufferedImage()));
 
@@ -80,7 +70,7 @@ public class ServerTest {
             Object response = in.readObject();
 
             // Validate response if needed
-            assertTrue(response instanceof Response);
+            assertInstanceOf(Response.class, response);
             Response serverResponse = (Response) response;
             assertEquals("ERROR", serverResponse.getStatus());
             assertEquals("Unrecognized message type", serverResponse.getMessage());
