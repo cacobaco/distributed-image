@@ -2,7 +2,9 @@ package g18.padi.client;
 
 import g18.padi.utils.BufferedImageSplit;
 import g18.padi.utils.ImageTransformer;
-
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,43 @@ public class ClientExecutor {
         }
 
         image = ImageTransformer.joinImages(finalImages, image.getWidth(), image.getHeight(), image.getType());
+        saveImageResult (image, "sample.png");
     }
+
+    /**
+     * Saves the resulting image to the "results" directory.
+     *
+     * @param image         the resulting image to be saved
+     * @param originalName  the original name of the image
+     */
+    private void saveImageResult(BufferedImage image, String originalName) {
+        String resultFileName;
+        String extension;
+
+        int extensionIndex = originalName.lastIndexOf('.');
+        if (extensionIndex != -1) {
+            extension = originalName.substring(extensionIndex + 1);
+            resultFileName = originalName.substring(0, extensionIndex) + "_edited";
+        } else {
+            extension = "png"; // Caso a extensão não seja encontrada, assume-se .png como padrão
+            resultFileName = originalName + "_edited";
+        }
+
+        File directory = new File("results");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        File resultFile = new File(directory, resultFileName + "." + extension);
+
+        try {
+            ImageIO.write(image, extension, resultFile);
+            System.out.println("Imagem resultante salva em: " + resultFile.getAbsolutePath());
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar a imagem resultante: " + e.getMessage());
+        }
+    }
+
 
     /**
      * Gets the processed image.
