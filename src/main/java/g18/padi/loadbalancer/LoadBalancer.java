@@ -42,6 +42,30 @@ public class LoadBalancer {
     }
 
     /**
+     * Increments the load of a given server.
+     * Synchronization is handled by the manager.
+     *
+     * @param serverPort the port of the server whose load is to be incremented.
+     * @param increment  the amount by which the load is to be incremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean incrementServerLoad(int serverPort, int increment) {
+        return manager.incrementServerLoad(serverPort, increment);
+    }
+
+    /**
+     * Decrements the load of a given server.
+     * Synchronization is handled by the manager.
+     *
+     * @param serverPort the port of the server whose load is to be decremented.
+     * @param decrement  the amount by which the load is to be decremented.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean decrementServerLoad(int serverPort, int decrement) {
+        return manager.decrementServerLoad(serverPort, decrement);
+    }
+
+    /**
      * Removes the load of a given server.
      * Synchronization is handled by the manager.
      *
