@@ -18,6 +18,8 @@ public class ClientMenu implements IMenu {
     private BufferedImage image;
     private JFrame frame;
 
+    private String newImagePath;
+
     /**
      * Constructs a new ClientMenu instance.
      *
@@ -63,7 +65,7 @@ public class ClientMenu implements IMenu {
             JFileChooser fileChooser = new JFileChooser();
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
-                String newImagePath = fileChooser.getSelectedFile().getPath();
+                newImagePath = fileChooser.getSelectedFile().getPath();
                 image = ImageReader.readImage(newImagePath);
                 icon.setImage(image);
                 mainPanel.repaint();
@@ -77,7 +79,7 @@ public class ClientMenu implements IMenu {
         buttonsPanel.add(Box.createVerticalGlue());
 
         removeRedButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, client, "red");
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "red");
             ce.execute();
             icon.setImage(ce.getImage());
             mainPanel.repaint();
@@ -90,7 +92,7 @@ public class ClientMenu implements IMenu {
         buttonsPanel.add(Box.createVerticalGlue());
 
         removeGreenButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, client, "green");
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "green");
             ce.execute();
             icon.setImage(ce.getImage());
             mainPanel.repaint();
@@ -103,7 +105,7 @@ public class ClientMenu implements IMenu {
         buttonsPanel.add(Box.createVerticalGlue());
 
         removeBlueButton.addActionListener(e -> {
-            ClientExecutor ce = new ClientExecutor(image, client, "blue");
+            ClientExecutor ce = new ClientExecutor(image, newImagePath, client, "blue");
             ce.execute();
             icon.setImage(ce.getImage());
             mainPanel.repaint();

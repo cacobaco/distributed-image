@@ -21,19 +21,22 @@ public class ClientExecutor {
     private final Client client;
     private final String color;
     private final List<ClientThread> threads;
+    private String imageName;
 
     /**
      * Constructs a ClientExecutor with the specified image and client.
      *
      * @param image  the BufferedImage to be processed
+     * @param imageName the image name
      * @param client the Client instance for communication with the server
      * @param color  the color to be removed from the image
      */
-    public ClientExecutor(BufferedImage image, Client client, String color) {
+   public ClientExecutor(BufferedImage image, String imageName, Client client, String color) {
         this.image = image;
         this.client = client;
         this.color = color;
         this.threads = new ArrayList<>();
+        this.imageName = imageName;
     }
 
     /**
@@ -70,7 +73,7 @@ public class ClientExecutor {
         }
 
         image = ImageTransformer.joinImages(finalImages, image.getType());
-        saveImageResult(image, "sample.png");
+        saveImageResult(image, imageName);
     }
 
     /**
