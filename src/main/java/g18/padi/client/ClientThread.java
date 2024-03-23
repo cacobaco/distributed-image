@@ -43,10 +43,18 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         lock.lock(); // Lock to ensure that only one thread sends a request to the server at a time
-        int serverPort = Main.getLoadBalancer().getBestServer();
-        Request request = new Request("remove color", color, imageSplit.getBufferedImage());
-        Socket socket = client.sendRequest("localhost", serverPort, request);
-        lock.unlock(); // Unlock after sending the request
+
+        Socket socket = null;
+
+        try {
+            int serverPort = Main.getLoadBalancer().getBestServer();
+            Request request = new Request("remove color", color, imageSplit.getBufferedImage());
+            socket = client.sendRequest("localhost", serverPort, request);
+        } catch (IllegalStateException e) {
+            System.out.println("No servers available");
+        } finally {
+            lock.unlock(); // Unlock after sending the request
+        }
 
         Response response = client.receiveResponse(socket);
 
