@@ -70,6 +70,8 @@ public class Server extends Thread {
                 Main.getLoadBalancer().incrementServerLoad(port, 1);
             }
         } finally {
+            Main.getLoadBalancer().removeServerLoad(port);
+
             executor.shutdown();
         }
     }
