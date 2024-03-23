@@ -1,10 +1,8 @@
 package g18.padi.menu;
 
 import g18.padi.client.Client;
+import g18.padi.client.ClientExecutor;
 import g18.padi.utils.ImageReader;
-import g18.padi.utils.ImageTransformer;
-import g18.padi.utils.Request;
-import g18.padi.utils.Response;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -48,10 +46,9 @@ public class ClientMenu implements IMenu {
         panel.add(button);
 
         button.addActionListener(e -> {
-            Request request = new Request("greeting", "Hello server! I'm client " + client.getName() + "!", sampleImage);
-            int port = 8000; // TODO: Use Load Balancer to get the best server's port
-            Response response = client.sendRequestAndReceiveResponse("localhost", port, request);
-            icon.setImage(ImageTransformer.createImageFromBytes(response.getImageSection()));
+            ClientExecutor ce = new ClientExecutor(sampleImage, client);
+            ce.execute();
+            icon.setImage(ce.getImage());
             panel.repaint();
         });
 
