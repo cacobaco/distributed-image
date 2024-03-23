@@ -11,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -48,14 +51,20 @@ public class Server extends Thread {
      * @throws IOException If an I/O error occurs when opening the socket.
      */
     private void startServer() throws IOException {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port " + port);
+
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                // Create and start a new thread for each connected client.
-                // TODO: Fix this for better resource management.
-                new Thread(new ClientHandler(clientSocket)).start();
+
+                executor.submit(new ClientHandler(clientSocket));
+
+                // TODO Update server load
             }
+        } finally {
+            executor.shutdown();
         }
     }
 
@@ -111,6 +120,8 @@ public class Server extends Thread {
                     System.err.println("Error closing client socket: " + e.getMessage());
                 }
             }
+
+            // TODO Update server load
         }
 
         /**
@@ -120,7 +131,6 @@ public class Server extends Thread {
          * @return The response object to be sent back to the client.
          */
         private Response handleRequest(Request request) {
-            // TODO: Implement actual request handling logic here.
             BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));
             return new Response("OK", "Hello, Client!", editedImage);
         }
