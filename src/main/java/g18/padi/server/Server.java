@@ -13,7 +13,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -133,10 +135,30 @@ public class Server extends Thread {
          * @return The response object to be sent back to the client.
          */
         private Response handleRequest(Request request) {
-            BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));
-            return new Response("OK", "Hello, Client!", editedImage);
+            switch (request.getMessageType()) {
+                case "remove color":
+                    return handleRemoveColorRequest(request);
+                default:
+                    return new Response("ERROR", "Unrecognized message type", ImageTransformer.createImageFromBytes(request.getImageSection()));
+            }
         }
 
+        /**
+         * Processes a request to remove a color from an image.
+         *
+         * @param request The request object.
+         * @return The response object containing the modified image.
+         */
+        private Response handleRemoveColorRequest(Request request) {
+            BufferedImage image = ImageTransformer.createImageFromBytes(request.getImageSection());
+
+            return switch (request.getMessageContent()) {
+                case "red" -> new Response("OK", "Red color removed", ImageTransformer.removeReds(image));
+                case "green" -> new Response("OK", "Green color removed", ImageTransformer.removeGreens(image));
+                case "blue" -> new Response("OK", "Blue color removed", ImageTransformer.removeBlues(image));
+                default -> new Response("ERROR", "Unrecognized color", image);
+            };
+        }
     }
 
 }

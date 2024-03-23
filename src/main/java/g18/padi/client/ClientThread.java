@@ -15,16 +15,19 @@ import java.awt.image.BufferedImage;
 public class ClientThread extends Thread {
     private final BufferedImageSplit imageSplit;
     private final Client client;
+    private final String color;
 
     /**
      * Constructs a ClientThread with the specified image split and client.
      *
      * @param imageSplit the BufferedImageSplit to be processed
      * @param client     the Client instance for communication with the server
+     * @param color      the color to be removed from the image
      */
-    public ClientThread(BufferedImageSplit imageSplit, Client client) {
+    public ClientThread(BufferedImageSplit imageSplit, Client client, String color) {
         this.imageSplit = imageSplit;
         this.client = client;
+        this.color = color;
     }
 
     /**
@@ -34,7 +37,7 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         int serverPort = Main.getLoadBalancer().getBestServer();
-        Request request = new Request("", "", imageSplit.getBufferedImage());
+        Request request = new Request("remove color", color, imageSplit.getBufferedImage());
         Response response = client.sendRequestAndReceiveResponse("localhost", serverPort, request);
         BufferedImage responseImage = ImageTransformer.createImageFromBytes(response.getImageSection());
         imageSplit.setBufferedImage(responseImage);
