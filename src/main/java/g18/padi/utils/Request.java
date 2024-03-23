@@ -66,14 +66,29 @@ public class Request implements Serializable {
         this.messageContent = messageContent;
     }
 
+    /**
+     * Returns the image section of the message.
+     *
+     * @return The image section of the message.
+     */
     public byte[] getImageSection() {
         return imageSection;
     }
 
+    /**
+     * Sets the image section of the message.
+     *
+     * @param imageSection The image section of the message.
+     */
     public void setImageSection(byte[] imageSection) {
         this.imageSection = imageSection;
     }
 
+    /**
+     * Returns a string representation of the Request.
+     *
+     * @return A string representation of the Request.
+     */
     @Override
     public String toString() {
         return "Request{" +
@@ -81,5 +96,5 @@ public class Request implements Serializable {
                 ", messageContent='" + messageContent + '\'' +
                 '}';
     }
-    
+
 }
