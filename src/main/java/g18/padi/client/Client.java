@@ -26,6 +26,14 @@ public class Client {
         this.name = name;
     }
 
+    /**
+     * Sends a request to the server at the specified host and port.
+     *
+     * @param host    The host of the server.
+     * @param port    The port of the server.
+     * @param request The request to send.
+     * @return The socket used to send the request.
+     */
     public Socket sendRequest(String host, int port, Request request) {
         try {
             Socket socket = new Socket(host, port);
@@ -42,6 +50,12 @@ public class Client {
         return null;
     }
 
+    /**
+     * Receives a response from the server through the specified socket.
+     *
+     * @param socket The socket used to receive the response.
+     * @return The response received.
+     */
     public Response receiveResponse(Socket socket) {
         try {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
