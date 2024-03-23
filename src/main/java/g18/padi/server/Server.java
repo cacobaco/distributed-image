@@ -13,9 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -55,7 +53,7 @@ public class Server extends Thread {
     private void startServer() throws IOException {
         int maxSegments = ConfigReader.getInstance().getServerMaxProcessingCapacity();
 
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(maxSegments, maxSegments, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+        ExecutorService executorService = Executors.newFixedThreadPool(maxSegments);
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port " + port);
@@ -65,14 +63,14 @@ public class Server extends Thread {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
 
-                executor.submit(new ClientHandler(clientSocket));
+                executorService.submit(new ClientHandler(clientSocket));
 
                 Main.getLoadBalancer().incrementServerLoad(port, 1);
             }
         } finally {
             Main.getLoadBalancer().removeServerLoad(port);
 
-            executor.shutdown();
+            executorService.shutdown();
         }
     }
 
