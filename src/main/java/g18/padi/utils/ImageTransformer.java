@@ -14,30 +14,26 @@ import java.io.IOException;
 public class ImageTransformer {
 
     /**
-     * Splits a given image in sub-images according to the number of rows and columns specified in the arguments.
+     * Splits an image into a grid of subimages.
      *
      * @param image    the BufferedImage containing the image
-     * @param nRows    the number of rows to split the image
-     * @param nColumns the number of columns to split the image
-     * @return a BufferedImage array containing the sub-images
+     * @param nRows    the number of rows in the grid
+     * @param nColumns the number of columns in the grid
+     * @return a BufferedImage array containing the subimages
      */
     public static BufferedImage[][] splitImage(BufferedImage image, int nRows, int nColumns) {
-        if ((image.getHeight() % nRows != 0) || (image.getWidth() % nColumns != 0)) {
-            throw new IllegalArgumentException("Invalid number of rows or columns");
-        }
-        int subImageHeight = image.getHeight() / nRows;
-        int subImageWidth = image.getWidth() / nColumns;
-        BufferedImage[][] images = new BufferedImage[nRows][nColumns];
-        int column = 0;
-        for (int i = 0; i < image.getWidth(); i += subImageWidth) {
-            int row = 0;
-            for (int j = 0; j < image.getHeight(); j += subImageHeight) {
-                images[row][column] = image.getSubimage(i, j, subImageWidth, subImageHeight);
-                row = row + 1;
+        int subimageWidth = image.getWidth() / nColumns;
+        int subimageHeight = image.getHeight() / nRows;
+        BufferedImage[][] subimages = new BufferedImage[nRows][nColumns];
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                subimages[i][j] = new BufferedImage(subimageWidth, subimageHeight, image.getType());
+                Graphics2D g = subimages[i][j].createGraphics();
+                g.drawImage(image, 0, 0, subimageWidth, subimageHeight, subimageWidth * j, subimageHeight * i, subimageWidth * j + subimageWidth, subimageHeight * i + subimageHeight, null);
+                g.dispose();
             }
-            column = column + 1;
         }
-        return images;
+        return subimages;
     }
 
     /**
@@ -63,26 +59,35 @@ public class ImageTransformer {
     }
 
     /**
-     * Joins a given array of BufferedImage in one final image. This method should be called after splitting the images
-     * using, for example, the method {@link ImageTransformer#splitImage(BufferedImage, int, int)}.
+     * Joins a set of images into a single image.
      *
-     * @param splitImages the BufferedImage array containing the sub-images
-     * @param width       the width of the final image
-     * @param height      the height of the final image
-     * @param type        the type of the final image
-     * @return a BufferedImage array containing the image joined
+     * @param images the BufferedImage array containing the images to join
+     * @param type   the type of the resulting image
+     * @return a BufferedImage containing the joined images
      */
-    public static BufferedImage joinImages(BufferedImage[][] splitImages, int width, int height, int type) {
-        BufferedImage resultingImage = new BufferedImage(width, height, type);
-        int nRows = splitImages.length;
-        int nColumns = splitImages[0].length;
-        for (int i = 0; i < nRows; i++) {
-            for (int j = 0; j < nColumns; j++) {
-                BufferedImage split = splitImages[i][j];
-                resultingImage.createGraphics().drawImage(split, split.getWidth() * j, split.getHeight() * i, null);
-            }
+    public static BufferedImage joinImages(BufferedImage[][] images, int type) {
+        int height = 0;
+        int width = 0;
+        for (BufferedImage[] image : images) {
+            height += image[0].getHeight();
         }
-        return resultingImage;
+        for (int i = 0; i < images[0].length; i++) {
+            width += images[0][i].getWidth();
+        }
+
+        BufferedImage result = new BufferedImage(width, height, type);
+        Graphics2D g = result.createGraphics();
+        int y = 0;
+        for (BufferedImage[] image : images) {
+            int x = 0;
+            for (BufferedImage bufferedImage : image) {
+                g.drawImage(bufferedImage, x, y, null);
+                x += bufferedImage.getWidth();
+            }
+            y += image[0].getHeight();
+        }
+        g.dispose();
+        return result;
     }
 
     /**
