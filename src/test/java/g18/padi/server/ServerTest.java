@@ -29,29 +29,39 @@ public class ServerTest {
 
     @BeforeEach
     public void setUp() {
-
         try {
             validImage = ImageIO.read(new File(IMAGE_PATH)); // Load a valid image
             imageSplit = new BufferedImageSplit(validImage, 3, 3);
         } catch (IOException e) {
             e.printStackTrace();
+            // Fail the test if image loading fails
+            assertTrue(false);
         }
+
+        // Start the server in a separate thread
         server = new Server(port);
         serverThread = new Thread(server);
         serverThread.start();
+
+        // Wait for the server to start
         try {
-            Thread.sleep(1000); // Adjust delay as needed
+            Thread.sleep(2000); // Adjust delay as needed
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // Verify that the server is running
+        assertTrue(serverThread.isAlive());
     }
 
     @AfterEach
     public void tearDown() {
-        serverThread.interrupt();
-        // Add a short delay to allow the server to stop
+        // Stop the server
+        server.interrupt();
+
+        // Wait for the server to stop
         try {
-            Thread.sleep(1000); // Adjust delay as needed
+            serverThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -62,9 +72,6 @@ public class ServerTest {
         try (Socket clientSocket = new Socket("localhost", port);
              ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
-
-            // Verify that the server is running
-            assertTrue(serverThread.isAlive());
 
             // Sending a test request
             out.writeObject(new Request("", "", imageSplit.getBufferedImage()));
